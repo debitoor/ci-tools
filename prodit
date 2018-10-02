@@ -1,0 +1,44 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+    echo "Please, provide title for your feature!"
+    exit -1
+fi
+
+current_branch=`git symbolic-ref HEAD --short`
+[ $? -ne 0 ] && exit -1;
+
+branch=${1//[^a-zA-Z0-9\-]/_}
+
+git add . -A
+[ $? -ne 0 ] && exit -1;
+
+git commit -m "$branch update" --allow-empty
+[ $? -ne 0 ] && exit -1;
+
+if [ "$current_branch" = "$branch" ]
+then
+    git push
+    [ $? -ne 0 ] && exit -1;
+else 
+    git checkout -b "$branch"
+    [ $? -ne 0 ] && exit -1;
+
+    git push --set-upstream origin "$branch"
+    [ $? -ne 0 ] && exit -1;
+fi
+
+pull=`hub pr list -h $branch -f "%I"`
+[ $? -ne 0 ] && exit -1;
+
+if [ -z $pull ]
+then
+    hub pull-request -m "$1"
+    [ $? -ne 0 ] && exit -1;
+fi
+
+mergeit
+[ $? -ne 0 ] && exit -1;
+
+exit 0;

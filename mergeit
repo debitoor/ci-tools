@@ -1,0 +1,28 @@
+#!/bin/bash
+
+branch=`git symbolic-ref HEAD --short`
+[ $? -ne 0 ] && exit -1;
+
+pull=`hub pr list -h $branch -f "%I"`
+[ $? -ne 0 ] && exit -1;
+[ -z $pull ] && echo "No open pull requests for current [$branch] branch found" && exit -1;
+
+git pull
+[ $? -ne 0 ] && exit -1;
+
+git merge origin/master
+[ $? -ne 0 ] && exit -1;
+
+comment='@bobhammer, merge it'
+if [ -n "$1" ]
+then
+    comment="$comment as: $1"
+fi
+
+git commit -m "$comment" --allow-empty
+[ $? -ne 0 ] && exit -1;
+
+git push
+[ $? -ne 0 ] && exit -1;
+
+exit 0;
