@@ -1,4 +1,4 @@
-class ci < Formula
+class Ci < Formula
     desc "Debitoor CI tools"
     homepage "https://github.com/debitoor/homebrew-tools/ci/README.md"
     url "https://github.com/debitoor/homebrew-tools.git"
