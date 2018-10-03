@@ -1,10 +1,8 @@
 class ci < Formula
     desc "Debitoor CI tools"
     homepage "https://github.com/debitoor/homebrew-tools/ci/README.md"
-
-    head do
-      url "https://github.com/debitoor/homebrew-tools.git"
-    end
+    url "https://github.com/debitoor/homebrew-tools.git"
+    head "https://github.com/debitoor/homebrew-tools.git"
   
     def install
       bin.install "./ci/mergeit"
